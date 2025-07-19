@@ -92,8 +92,13 @@ const session = await stripeInstance.checkout.sessions.create({
 booking.PaymentLink = session.url
 await booking.save()
 
-console.log("Stripe URL:", session.url)
-
+//Run Inngest to check 10 mins
+await inngest.send({
+  name:"app/checkpayment",
+  data:{
+    bookingId: booking._id.toString()
+  }
+})
 res.json({success:true, url:session.url})
 
     } catch (error) {
